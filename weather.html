@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天氣助手 - RaceLink Taiwan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .weather-hero {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 3rem 0;
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .temp-display {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .weather-condition {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .weather-details {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .outfit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            border-left: 5px solid var(--primary-orange);
+        }
+
+        .outfit-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--deep-blue);
+        }
+
+        .outfit-list li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .outfit-list li::before {
+            content: "👕";
+            margin-right: 0.5rem;
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .forecast-item {
+            background: white;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            box-shadow: var(--shadow-card);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container flex-between">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo.png" alt="RaceLink TW">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">首頁</a></li>
+                <li><a href="calendar.html">賽事行事曆</a></li>
+                <li><a href="weather.html" class="active">天氣助手</a></li>
+                <li><a href="logistics.html">賽事地圖</a></li>
+                <li><a href="dashboard.html">個人儀表板</a></li>
+            </ul>
+            <a href="#" class="btn btn-primary">登入 / 註冊</a>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 2rem 0;">
+        <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+            <h2>賽事天氣預報：</h2>
+            <select style="font-size: 1.25rem; padding: 0.5rem; border-radius: var(--radius-sm);">
+                <option>2026 臺北渣打公益馬拉松 (01/18)</option>
+                <option>2026 高雄富邦馬拉松 (02/08)</option>
+                <option>2026 新北市萬金石馬拉松 (03/15)</option>
+            </select>
+        </div>
+
+        <div class="weather-hero">
+            <h3>📍 台北市 | 總統府廣場</h3>
+            <div class="temp-display">16°C</div>
+            <div class="weather-condition">多雲時陰 ☁️</div>
+            <div class="weather-details">
+                <span>💧 濕度: 75%</span>
+                <span>🌬️ 風速: 3.5 m/s</span>
+                <span>🌡️ 體感: 14°C</span>
+            </div>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+            <!-- Outfit Suggestion -->
+            <div class="outfit-card">
+                <div class="outfit-title">🏃‍♂️ 穿搭建議 (體感偏涼)</div>
+                <ul class="outfit-list">
+                    <li>上身：透氣長袖或短袖搭配袖套</li>
+                    <li>下身：飄飄褲或壓縮長褲</li>
+                    <li>配件：推薦戴手套與薄風衣，起跑前保暖</li>
+                </ul>
+                <div style="margin-top: 1rem; font-size: 0.875rem; color: #666;">
+                    * 建議採用「洋蔥式穿法」，起跑後身體熱開可將風衣繫在腰間。
+                </div>
+            </div>
+
+            <!-- Race Hourly Forecast -->
+            <div>
+                <h3 style="margin-bottom: 1rem;">賽事當日預報 (06:00 - 12:00)</h3>
+                <div class="forecast-grid">
+                    <div class="forecast-item">
+                        <div>06:00</div>
+                        <div style="font-size: 1.5rem;">☁️</div>
+                        <div>15°C</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div>08:00</div>
+                        <div style="font-size: 1.5rem;">⛅</div>
+                        <div>17°C</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div>10:00</div>
+                        <div style="font-size: 1.5rem;">☀️</div>
+                        <div>20°C</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div>12:00</div>
+                        <div style="font-size: 1.5rem;">☀️</div>
+                        <div>22°C</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
