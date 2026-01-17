@@ -7,57 +7,106 @@
     <title>賽事地圖 - RaceLink Taiwan</title>
     <link rel="stylesheet" href="css/style.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Russo+One&family=Space+Grotesk:wght@300;400;500;700&display=swap"
         rel="stylesheet">
     <style>
+        .map-section-header {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
         .map-container {
             position: relative;
-            background: #e9ecef;
+            background: #1a2236;
             height: 500px;
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg);
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #adb5bd;
+            color: var(--text-sccondary);
             font-size: 1.5rem;
-            margin-bottom: 2rem;
-            border: 2px dashed #ced4da;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .map-container::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
         }
 
         .logistics-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
 
         .logistics-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--radius-md);
+            background: var(--surface-dark);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
             box-shadow: var(--shadow-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logistics-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-neon);
         }
 
         .logistics-icon {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-            background: var(--bg-light);
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
         }
 
         .logistics-title {
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-family: 'Russo One', sans-serif;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+            color: var(--text-primary);
         }
 
         .logistics-desc {
-            font-size: 0.875rem;
-            color: var(--text-light);
+            font-size: 0.95rem;
+            color: var(--text-sccondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-box {
+            margin-top: 3rem;
+            background: rgba(255, 72, 0, 0.1);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border-left: 5px solid var(--primary-neon);
+            color: var(--text-primary);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
         }
     </style>
 </head>
@@ -75,47 +124,67 @@
                 <li><a href="logistics.html" class="active">賽事地圖</a></li>
                 <li><a href="dashboard.html">個人儀表板</a></li>
             </ul>
-            <a href="#" class="btn btn-primary">登入 / 註冊</a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="#" class="btn btn-primary">登入 / 註冊</a>
+                <button class="theme-toggle-btn" aria-label="Toggle Dark Mode">🌙</button>
+            </div>
         </div>
     </nav>
 
-    <div class="container" style="padding: 2rem 0;">
-        <h2 style="margin-bottom: 1.5rem;">賽事會場指引：2026 臺北渣打公益馬拉松</h2>
+    <div class="container animate-fade-up" style="padding: 3rem 0;">
+        <div class="map-section-header">
+            <h2 style="margin-bottom: 0; border-left: 5px solid var(--primary-neon); padding-left: 1rem;">賽事會場指引</h2>
+            <div style="font-size: 1.1rem; color: var(--text-sccondary);">2026 臺北渣打公益馬拉松</div>
+        </div>
 
         <div class="map-container">
-            <!-- In a real app, this would be a Google Map or Leaflet instance -->
-            <div>🗺️ Interactive Map Placeholder</div>
+            <img src="images/map_dark.png" alt="Race Logistics Map"
+                style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;">
+            <!-- Overlay Interface Elements -->
+            <div
+                style="position: absolute; bottom: 20px; left: 20px; background: rgba(5, 10, 24, 0.8); backdrop-filter: blur(5px); padding: 10px 20px; border: 1px solid var(--primary-neon); border-radius: 4px;">
+                <span style="color: var(--primary-neon); font-weight: bold; font-family: 'Russo One';">LIVE
+                    TRACKING</span>
+                <div style="display: flex; gap: 4px; margin-top: 5px;">
+                    <div
+                        style="width: 8px; height: 8px; background: var(--accent-cyan); border-radius: 50%; animation: blink 1s infinite;">
+                    </div>
+                    <span style="font-size: 0.8rem; color: var(--text-primary);">GPS Active</span>
+                </div>
+            </div>
         </div>
 
         <div class="logistics-grid">
-            <div class="logistics-card">
+            <div class="logistics-card delay-100">
                 <div class="logistics-icon">🎒</div>
                 <h3 class="logistics-title">衣物保管區</h3>
-                <p class="logistics-desc">位於會場左側，請依照號碼布顏色分流寄物。</p>
-                <button class="btn btn-secondary"
-                    style="margin-top: 1rem; font-size: 0.8rem; padding: 0.5rem 1rem;">導航前往</button>
+                <p class="logistics-desc">位於會場左側，A-E 區請依照號碼布顏色分流寄物。開放時間：04:00 - 12:00。</p>
+                <button class="btn btn-secondary" style="width: 100%;">導航前往</button>
             </div>
-            <div class="logistics-card">
+            <div class="logistics-card delay-200">
                 <div class="logistics-icon">🚻</div>
                 <h3 class="logistics-title">流動廁所</h3>
-                <p class="logistics-desc">起跑點後方設有 50 座流動廁所，建議提早使用。</p>
-                <button class="btn btn-secondary"
-                    style="margin-top: 1rem; font-size: 0.8rem; padding: 0.5rem 1rem;">導航前往</button>
+                <p class="logistics-desc">起跑點後方設有 50 座流動廁所。建議往後方移動，排隊人潮較少。</p>
+                <button class="btn btn-secondary" style="width: 100%;">導航前往</button>
             </div>
-            <div class="logistics-card">
+            <div class="logistics-card delay-300">
                 <div class="logistics-icon">🚌</div>
                 <h3 class="logistics-title">接駁車上下點</h3>
-                <p class="logistics-desc">捷運台大醫院站 2 號出口，首班車 04:30 發車。</p>
-                <button class="btn btn-secondary"
-                    style="margin-top: 1rem; font-size: 0.8rem; padding: 0.5rem 1rem;">導航前往</button>
+                <p class="logistics-desc">捷運台大醫院站 2 號出口，首班車 04:30 發車。請出示號碼布搭乘。</p>
+                <button class="btn btn-secondary" style="width: 100%;">導航前往</button>
             </div>
         </div>
 
-        <div
-            style="margin-top: 2rem; background: #fff3cd; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid #ffeeba; color: #856404;">
-            <strong>⚠️ 交通管制提醒：</strong> 凱達格蘭大道將於 04:00 - 12:00 進行全線封閉，請改道行駛。
+        <div class="alert-box delay-300">
+            <div style="font-size: 1.5rem;">⚠️</div>
+            <div>
+                <strong style="display: block; margin-bottom: 0.25rem; color: var(--primary-neon);">交通管制提醒 Traffic
+                    Control</strong>
+                凱達格蘭大道將於 04:00 - 12:00 進行全線封閉，請親友加油團改道行駛中正紀念堂周邊。
+            </div>
         </div>
     </div>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

@@ -7,74 +7,122 @@
     <title>個人儀表板 - RaceLink Taiwan</title>
     <link rel="stylesheet" href="css/style.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Russo+One&family=Space+Grotesk:wght@300;400;500;700&display=swap"
         rel="stylesheet">
     <style>
         .profile-header {
-            background: white;
+            background: var(--surface-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 2rem;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-card);
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             gap: 2rem;
             margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary-neon);
         }
 
         .avatar {
             width: 100px;
             height: 100px;
-            background: #ddd;
+            background: linear-gradient(135deg, var(--deep-midnight), #222);
+            border: 2px solid var(--primary-neon);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
+            box-shadow: var(--glow-primary);
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: white;
+            background: var(--surface-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 1.5rem;
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-card);
             text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            color: var(--primary-orange);
+            color: var(--primary-neon);
             display: block;
+            margin: 0.5rem 0;
+            font-family: 'Russo One', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 72, 0, 0.2);
         }
 
         .stat-label {
             font-size: 0.875rem;
-            color: var(--text-light);
+            color: var(--text-sccondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            color: var(--text-sccondary);
+            opacity: 0.7;
         }
 
         .recent-races {
-            background: white;
+            background: var(--surface-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 2rem;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-card);
+            border-radius: var(--radius-lg);
         }
 
         .history-item {
             display: flex;
             justify-content: space-between;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--bg-light);
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.2s;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            padding-left: 1rem;
+            padding-right: 1rem;
+            margin: 0 -1rem;
         }
 
         .history-item:last-child {
             border-bottom: none;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            color: var(--text-sccondary);
         }
     </style>
 </head>
@@ -92,24 +140,25 @@
                 <li><a href="logistics.html">賽事地圖</a></li>
                 <li><a href="dashboard.html" class="active">個人儀表板</a></li>
             </ul>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <span>你好, 跑者 Alex</span>
-                <div style="width: 32px; height: 32px; background: var(--primary-orange); border-radius: 50%;"></div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="color: var(--text-primary);">你好, 跑者 Alex</span>
+                <div
+                    style="width: 32px; height: 32px; background: var(--primary-neon); border-radius: 50%; box-shadow: var(--glow-primary);">
+                </div>
+                <button class="theme-toggle-btn" aria-label="Toggle Dark Mode" style="margin-left: 0.5rem;">🌙</button>
             </div>
         </div>
     </nav>
 
-    <div class="container" style="padding: 2rem 0;">
+    <div class="container animate-fade-up" style="padding: 3rem 0;">
         <div class="profile-header">
             <div class="avatar">🏃</div>
             <div>
-                <h2 style="margin-bottom: 0.25rem;">Alex Chen</h2>
-                <p style="color: var(--text-light);">全馬愛好者 | 目標：SUB 330</p>
+                <h2 style="margin-bottom: 0.25rem; font-size: 2.5rem;">Alex Chen</h2>
+                <p style="color: var(--text-sccondary);">全馬愛好者 | 目標：SUB 330</p>
                 <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                    <span
-                        style="background: var(--bg-light); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">配速穩定</span>
-                    <span
-                        style="background: var(--bg-light); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">晨跑控</span>
+                    <span class="tag">配速穩定</span>
+                    <span class="tag">晨跑控</span>
                 </div>
             </div>
             <div style="margin-left: auto;">
@@ -117,59 +166,63 @@
             </div>
         </div>
 
-        <h3 style="margin-bottom: 1rem;">最佳成績 (PB)</h3>
+        <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+            最佳成績 <span
+                style="font-size: 1rem; color: var(--accent-volt); background: rgba(204, 255, 0, 0.1); padding: 2px 8px; border-radius: 4px;">PB</span>
+        </h3>
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card delay-100">
                 <span class="stat-label">全馬 Marathon</span>
                 <span class="stat-value">03:45:12</span>
-                <span class="stat-label">2025 台北馬</span>
+                <span class="stat-subtext">2025 台北馬</span>
             </div>
-            <div class="stat-card">
+            <div class="stat-card delay-200">
                 <span class="stat-label">半馬 Half Marathon</span>
                 <span class="stat-value">01:42:30</span>
-                <span class="stat-label">2024 長榮馬</span>
+                <span class="stat-subtext">2024 長榮馬</span>
             </div>
-            <div class="stat-card">
+            <div class="stat-card delay-300">
                 <span class="stat-label">10K Run</span>
                 <span class="stat-value">00:48:15</span>
-                <span class="stat-label">2024 渣打馬</span>
+                <span class="stat-subtext">2024 渣打馬</span>
             </div>
         </div>
 
-        <h3 style="margin-bottom: 1rem;">近期賽事記錄</h3>
-        <div class="recent-races">
+        <h3 style="margin-bottom: 1.5rem;">近期賽事記錄</h3>
+        <div class="recent-races delay-300">
             <div class="history-item">
                 <div>
-                    <strong>2025 臺北馬拉松</strong>
-                    <div style="font-size: 0.8rem; color: var(--text-light);">2025/12/21 | 全馬組</div>
+                    <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">2025 臺北馬拉松</strong>
+                    <div style="font-size: 0.9rem; color: var(--text-sccondary);">2025/12/21 | 全馬組</div>
                 </div>
                 <div style="text-align: right;">
-                    <strong>03:45:12</strong>
-                    <div style="font-size: 0.8rem; color: green;">New PB! 🎉</div>
+                    <strong style="font-size: 1.5rem; color: var(--text-primary);">03:45:12</strong>
+                    <div style="font-size: 0.8rem; color: var(--accent-volt); font-weight: bold;">New PB! 🎉</div>
                 </div>
             </div>
             <div class="history-item">
                 <div>
-                    <strong>2025 田中馬拉松</strong>
-                    <div style="font-size: 0.8rem; color: var(--text-light);">2025/11/09 | 全馬組</div>
+                    <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">2025 田中馬拉松</strong>
+                    <div style="font-size: 0.9rem; color: var(--text-sccondary);">2025/11/09 | 全馬組</div>
                 </div>
                 <div style="text-align: right;">
-                    <strong>04:12:05</strong>
-                    <div style="font-size: 0.8rem; color: var(--text-light);">完賽</div>
+                    <strong style="font-size: 1.5rem; color: var(--text-primary);">04:12:05</strong>
+                    <div style="font-size: 0.8rem; color: var(--text-sccondary);">完賽</div>
                 </div>
             </div>
             <div class="history-item">
                 <div>
-                    <strong>2025 長榮航空城市馬拉松</strong>
-                    <div style="font-size: 0.8rem; color: var(--text-light);">2025/10/27 | 半馬組</div>
+                    <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">2025 長榮航空城市馬拉松</strong>
+                    <div style="font-size: 0.9rem; color: var(--text-sccondary);">2025/10/27 | 半馬組</div>
                 </div>
                 <div style="text-align: right;">
-                    <strong>01:45:22</strong>
-                    <div style="font-size: 0.8rem; color: var(--text-light);">完賽</div>
+                    <strong style="font-size: 1.5rem; color: var(--text-primary);">01:45:22</strong>
+                    <div style="font-size: 0.8rem; color: var(--text-sccondary);">完賽</div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
