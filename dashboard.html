@@ -138,6 +138,7 @@
                 <li><a href="calendar.html">賽事行事曆</a></li>
                 <li><a href="weather.html">天氣助手</a></li>
                 <li><a href="logistics.html">賽事地圖</a></li>
+                <li><a href="components/Octalysis/DailySurprise.html">每日跑者驚喜包</a></li>
                 <li><a href="dashboard.html" class="active">個人儀表板</a></li>
             </ul>
             <div style="display: flex; gap: 15px; align-items: center;">
@@ -166,62 +167,159 @@
             </div>
         </div>
 
-        <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
-            最佳成績 <span
-                style="font-size: 1rem; color: var(--accent-volt); background: rgba(204, 255, 0, 0.1); padding: 2px 8px; border-radius: 4px;">PB</span>
-        </h3>
-        <div class="stats-grid">
-            <div class="stat-card delay-100">
-                <span class="stat-label">全馬 Marathon</span>
-                <span class="stat-value">03:45:12</span>
-                <span class="stat-subtext">2025 台北馬</span>
-            </div>
-            <div class="stat-card delay-200">
-                <span class="stat-label">半馬 Half Marathon</span>
-                <span class="stat-value">01:42:30</span>
-                <span class="stat-subtext">2024 長榮馬</span>
-            </div>
-            <div class="stat-card delay-300">
-                <span class="stat-label">10K Run</span>
-                <span class="stat-value">00:48:15</span>
-                <span class="stat-subtext">2024 渣打馬</span>
-            </div>
+        <style>
+            .octalysis-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .oct-link {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: var(--text-primary);
+                padding: 1rem;
+                border-radius: var(--radius-md);
+                text-align: center;
+                text-decoration: none;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .oct-link:hover {
+                background: rgba(var(--primary-neon-rgb), 0.1);
+                border-color: var(--primary-neon);
+                transform: translateY(-3px);
+            }
+
+            .oct-icon {
+                font-size: 1.5rem;
+            }
+        </style>
+
+        <div class="octalysis-grid">
+
+            <a href="javascript:void(0)" onclick="switchTab('components/Octalysis/MedalCabinet.html', this)"
+                class="oct-link">
+                <span class="oct-icon">🏅</span> 數位獎牌牆
+            </a>
+            <a href="javascript:void(0)" onclick="switchTab('components/Octalysis/TaiwanMissionMap.html', this)"
+                class="oct-link">
+                <span class="oct-icon">🗺️</span> 台灣馬拉松地圖
+            </a>
+            <a href="javascript:void(0)" onclick="switchTab('components/Octalysis/GearLab.html', this)"
+                class="oct-link">
+                <span class="oct-icon">🧪</span> 裝備實驗室
+            </a>
+            <a href="javascript:void(0)" onclick="switchTab('components/Octalysis/RaceBuddies.html', this)"
+                class="oct-link">
+                <span class="oct-icon">🤝</span> 賽道戰友
+            </a>
         </div>
 
-        <h3 style="margin-bottom: 1.5rem;">近期賽事記錄</h3>
-        <div class="recent-races delay-300">
-            <div class="history-item">
-                <div>
-                    <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">2025 臺北馬拉松</strong>
-                    <div style="font-size: 0.9rem; color: var(--text-sccondary);">2025/12/21 | 全馬組</div>
+        <!-- Dynamic Content Container -->
+        <div id="content-container">
+            <!-- Default View: Stats & History -->
+            <div id="default-view">
+
+                <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+                    最佳成績 <span
+                        style="font-size: 1rem; color: var(--accent-volt); background: rgba(204, 255, 0, 0.1); padding: 2px 8px; border-radius: 4px;">PB</span>
+                </h3>
+                <div class="stats-grid">
+                    <div class="stat-card delay-100">
+                        <span class="stat-label">全馬 Marathon</span>
+                        <span class="stat-value">03:45:12</span>
+                        <span class="stat-subtext">2025 台北馬</span>
+                    </div>
+                    <div class="stat-card delay-200">
+                        <span class="stat-label">半馬 Half Marathon</span>
+                        <span class="stat-value">01:42:30</span>
+                        <span class="stat-subtext">2024 長榮馬</span>
+                    </div>
+                    <div class="stat-card delay-300">
+                        <span class="stat-label">10K Run</span>
+                        <span class="stat-value">00:48:15</span>
+                        <span class="stat-subtext">2024 渣打馬</span>
+                    </div>
                 </div>
-                <div style="text-align: right;">
-                    <strong style="font-size: 1.5rem; color: var(--text-primary);">03:45:12</strong>
-                    <div style="font-size: 0.8rem; color: var(--accent-volt); font-weight: bold;">New PB! 🎉</div>
+
+                <h3 style="margin-bottom: 1.5rem;">近期賽事記錄</h3>
+                <div class="recent-races delay-300">
+                    <div class="history-item">
+                        <div>
+                            <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">2025
+                                臺北馬拉松</strong>
+                            <div style="font-size: 0.9rem; color: var(--text-sccondary);">2025/12/21 | 全馬組</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong style="font-size: 1.5rem; color: var(--text-primary);">03:45:12</strong>
+                            <div style="font-size: 0.8rem; color: var(--accent-volt); font-weight: bold;">New PB! 🎉
+                            </div>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div>
+                            <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">2025
+                                田中馬拉松</strong>
+                            <div style="font-size: 0.9rem; color: var(--text-sccondary);">2025/11/09 | 全馬組</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong style="font-size: 1.5rem; color: var(--text-primary);">04:12:05</strong>
+                            <div style="font-size: 0.8rem; color: var(--text-sccondary);">完賽</div>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div>
+                            <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">2025
+                                長榮航空城市馬拉松</strong>
+                            <div style="font-size: 0.9rem; color: var(--text-sccondary);">2025/10/27 | 半馬組</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong style="font-size: 1.5rem; color: var(--text-primary);">01:45:22</strong>
+                            <div style="font-size: 0.8rem; color: var(--text-sccondary);">完賽</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="history-item">
-                <div>
-                    <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">2025 田中馬拉松</strong>
-                    <div style="font-size: 0.9rem; color: var(--text-sccondary);">2025/11/09 | 全馬組</div>
-                </div>
-                <div style="text-align: right;">
-                    <strong style="font-size: 1.5rem; color: var(--text-primary);">04:12:05</strong>
-                    <div style="font-size: 0.8rem; color: var(--text-sccondary);">完賽</div>
-                </div>
-            </div>
-            <div class="history-item">
-                <div>
-                    <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">2025 長榮航空城市馬拉松</strong>
-                    <div style="font-size: 0.9rem; color: var(--text-sccondary);">2025/10/27 | 半馬組</div>
-                </div>
-                <div style="text-align: right;">
-                    <strong style="font-size: 1.5rem; color: var(--text-primary);">01:45:22</strong>
-                    <div style="font-size: 0.8rem; color: var(--text-sccondary);">完賽</div>
-                </div>
-            </div>
+            </div> <!-- End default-view -->
+
+            <!-- Module Frame -->
+            <iframe id="module-frame" style="width: 100%; border: none; min-height: 800px; display: none;"
+                scrolling="no"></iframe>
         </div>
+
     </div>
+
+    <script>
+        function switchTab(url, element) {
+            // Visual feedback for active link could be added here
+
+            // Switch Views
+            document.getElementById('default-view').style.display = 'none';
+            const frame = document.getElementById('module-frame');
+            frame.style.display = 'block';
+            frame.src = url;
+
+            // Auto Resize Iframe
+            frame.onload = function () {
+                setTimeout(() => {
+                    try {
+                        const height = frame.contentWindow.document.body.scrollHeight;
+                        // Add some buffer
+                        frame.style.height = (height + 100) + 'px';
+                    } catch (e) {
+                        console.log('Resize error:', e);
+                        frame.style.height = '1000px'; // Fallback
+                    }
+                }, 100);
+            };
+        }
+    </script>
     <script src="js/main.js"></script>
 </body>
 

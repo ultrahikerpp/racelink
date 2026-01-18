@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>裝備實驗室 - RaceLink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap');
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Toggle Switch Custom */
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-slate-950 min-h-screen text-slate-900 dark:text-slate-200 p-8">
+
+    <div class="max-w-7xl mx-auto flex gap-8 h-[800px]">
+
+        <!-- Sidebar Controls -->
+        <div
+            class="w-1/4 bg-white dark:bg-slate-900 rounded-3xl p-8 border border-gray-200 dark:border-slate-800 shadow-xl flex flex-col justify-between transition-colors duration-300">
+            <div>
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter">裝備實驗室</h2>
+                <p class="text-xs font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest mb-10">Gear
+                    Laboratory</p>
+
+                <!-- Toggles -->
+                <div class="space-y-6">
+                    <!-- Toggle 1 -->
+                    <div class="flex items-center justify-between group">
+                        <span
+                            class="font-bold text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">追求速度</span>
+                        <label class="toggle-switch relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="toggle-speed" class="sr-only peer"
+                                onchange="updateRecommendations()">
+                            <div
+                                class="w-14 h-8 bg-gray-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:bg-cyan-500 shadow-inner">
+                            </div>
+                        </label>
+                    </div>
+                    <!-- Toggle 2 -->
+                    <div class="flex items-center justify-between group">
+                        <span
+                            class="font-bold text-slate-500 dark:text-slate-400 group-hover:text-amber-500 transition-colors">怕熱體質</span>
+                        <label class="toggle-switch relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="toggle-heat" class="sr-only peer"
+                                onchange="updateRecommendations()">
+                            <div
+                                class="w-14 h-8 bg-gray-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:bg-amber-500 shadow-inner">
+                            </div>
+                        </label>
+                    </div>
+                    <!-- Toggle 3 -->
+                    <div class="flex items-center justify-between group">
+                        <span
+                            class="font-bold text-slate-500 dark:text-slate-400 group-hover:text-blue-500 transition-colors">可能有雨</span>
+                        <label class="toggle-switch relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="toggle-rain" class="sr-only peer"
+                                onchange="updateRecommendations()">
+                            <div
+                                class="w-14 h-8 bg-gray-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:bg-blue-600 shadow-inner">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Bot Status -->
+            <div class="bg-gray-100 dark:bg-slate-800 rounded-xl p-4 border border-gray-200 dark:border-slate-700">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase">AI Analysis
+                        Active</span>
+                </div>
+                <p id="ai-status" class="text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                    根據您目前的設定，系統建議優先考慮透氣性與輕量化裝備。
+                </p>
+            </div>
+        </div>
+
+        <!-- Main Display -->
+        <div class="flex-1 space-y-6">
+            <!-- Card 1: Footwear -->
+            <div id="card-shoes"
+                class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-gray-200 dark:border-slate-800 shadow-lg relative overflow-hidden group hover:border-cyan-500/50 transition-all duration-500">
+                <div
+                    class="absolute right-0 top-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl -mr-16 -mt-16 transition-colors">
+                </div>
+
+                <div class="relative z-10 flex justify-between items-start">
+                    <div>
+                        <div class="text-xs font-bold text-cyan-600 dark:text-cyan-500 mb-2 uppercase tracking-widest">
+                            Recommended Footwear</div>
+                        <h3 id="shoe-name"
+                            class="text-3xl font-black text-slate-900 dark:text-white mb-2 transition-all">Zoom Fly 5
+                        </h3>
+                        <p id="shoe-desc" class="text-slate-600 dark:text-slate-400 max-w-md">全能型跑鞋，適合日常訓練與長距離配速跑。</p>
+                    </div>
+                    <div class="text-5xl opacity-80 group-hover:scale-110 transition-transform duration-500">👟</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 h-1/2">
+                <!-- Card 2: Apparel -->
+                <div id="card-apparel"
+                    class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-gray-200 dark:border-slate-800 shadow-lg relative overflow-hidden group hover:border-amber-500/50 transition-all duration-500">
+                    <div class="absolute right-0 bottom-0 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl -mr-10 -mb-10">
+                    </div>
+
+                    <div class="text-xs font-bold text-amber-600 dark:text-amber-500 mb-2 uppercase tracking-widest">
+                        Apparel</div>
+                    <h3 id="apparel-name" class="text-2xl font-black text-slate-900 dark:text-white mb-2">排汗背心</h3>
+                    <p id="apparel-desc" class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">基本款，適合大多數天氣。
+                    </p>
+                    <div class="absolute bottom-6 right-6 text-4xl group-hover:rotate-12 transition-transform">🎽</div>
+                </div>
+
+                <!-- Card 3: Essentials -->
+                <div id="card-essentials"
+                    class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-gray-200 dark:border-slate-800 shadow-lg relative overflow-hidden group hover:border-purple-500/50 transition-all duration-500">
+                    <div class="absolute left-0 bottom-0 w-48 h-48 bg-purple-500/5 rounded-full blur-3xl -ml-10 -mb-10">
+                    </div>
+
+                    <div class="text-xs font-bold text-purple-600 dark:text-purple-500 mb-2 uppercase tracking-widest">
+                        Essentials</div>
+                    <h3 id="essential-name" class="text-2xl font-black text-slate-900 dark:text-white mb-2">運動毛巾</h3>
+                    <p id="essential-desc" class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">隨身攜帶，保持乾爽。
+                    </p>
+                    <div class="absolute bottom-6 right-6 text-4xl group-hover:-translate-y-2 transition-transform">🧢
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gearDatabase = {
+            default: {
+                shoes: { name: "Zoom Fly 5", desc: "全能型跑鞋，適合日常訓練與長距離配速跑。" },
+                apparel: { name: "排汗背心", desc: "輕量透氣，適合大多數天氣條件。" },
+                essential: { name: "運動毛巾", desc: "隨身攜帶，保持乾爽。" },
+                ai: "根據您目前的設定，系統建議優先考慮透氣性與輕量化裝備。"
+            },
+            speed: {
+                shoes: { name: "Vaporfly 3", desc: "菁英競速鞋款，全掌碳纖維板提供極致推進力。" },
+                apparel: { name: "競速背心", desc: "極致輕量化，減少風阻與摩擦。" },
+                essential: { name: "能量膠", desc: "快速補充肝醣，維持高速續航力。" },
+                ai: "偵測到競速需求：已切換至高性能輕量化配置，專注於推進力與能量回饋。"
+            },
+            rain: {
+                shoes: { name: "Pegasus 41 GTX", desc: "GORE-TEX 防水鞋面，抓地力強，雨天首選。" },
+                apparel: { name: "防潑水風衣", desc: "DWR 塗層，阻擋雨水同時保持透氣。" },
+                essential: { name: "防水帽", desc: "避免雨水流入眼睛，保持視線清晰。" },
+                ai: "天候警示（雨天）：建議穿著防水與高抓地力裝備，注意路面濕滑。"
+            },
+            hot: {
+                shoes: { name: "Streakfly", desc: "極簡輕薄大底，最大化散熱效率。" },
+                apparel: { name: "超透氣網布衫", desc: "大孔洞網眼設計，加速汗水蒸發。" },
+                essential: { name: "空頂帽", desc: "遮陽同時保持頭頂散熱通風。" },
+                ai: "高溫警示：系統已最佳化『散熱效率』，請注意水分補充與防曬。"
+            }
+        };
+
+        function updateRecommendations() {
+            const isSpeed = document.getElementById('toggle-speed').checked;
+            const isHeat = document.getElementById('toggle-heat').checked;
+            const isRain = document.getElementById('toggle-rain').checked;
+
+            let mode = 'default';
+            if (isSpeed) mode = 'speed';
+            if (isRain) mode = 'rain'; // Rain overrides speed for safety logic demo
+            if (isHeat) mode = 'hot';  // Heat overrides all (demo logic)
+
+            // Logic Combination (Simplified)
+            // If Speed + Rain -> Maybe Grip + Light? 
+            // For Octalysis demo, simple state switching is enough visual feedback.
+
+            const data = gearDatabase[mode];
+
+            // Update DOM with Transitions
+            updateText('shoe-name', data.shoes.name);
+            updateText('shoe-desc', data.shoes.desc);
+            updateText('apparel-name', data.apparel.name);
+            updateText('apparel-desc', data.apparel.desc);
+            updateText('essential-name', data.essential.name);
+            updateText('essential-desc', data.essential.desc);
+
+            const aiStatus = document.getElementById('ai-status');
+            aiStatus.style.opacity = '0';
+            setTimeout(() => {
+                aiStatus.textContent = data.ai;
+                aiStatus.style.opacity = '1';
+            }, 200);
+        }
+
+        function updateText(id, text) {
+            const el = document.getElementById(id);
+            el.style.opacity = '0';
+            setTimeout(() => {
+                el.textContent = text;
+                el.style.opacity = '1';
+            }, 200);
+        }
+
+        // Theme Sync Logic
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'theme-change') {
+                setTheme(event.data.theme);
+            }
+        });
+
+        try {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        } catch (e) {
+            setTheme('dark');
+        }
+    </script>
+</body>
+
+</html>

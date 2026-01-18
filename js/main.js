@@ -4,41 +4,47 @@ console.log('RaceLink Taiwan Loaded');
 document.addEventListener('DOMContentLoaded', () => {
     const themeBtn = document.querySelector('.theme-toggle-btn');
     const html = document.documentElement;
-    const body = document.body; // Fallback if data-theme is on body
 
     // Check saved theme or system preference
     const savedTheme = localStorage.getItem('theme');
     const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
+    // Initial Setup
     if (savedTheme === 'light') {
-        html.setAttribute('data-theme', 'light');
-        updateIcon(false);
+        applyTheme('light');
     } else if (savedTheme === 'dark') {
-        html.removeAttribute('data-theme');
-        updateIcon(true);
+        applyTheme('dark');
     } else {
-        // Default to dark for this specific design if no preference, 
-        // or follow system. Here we default to our Dark design.
-        html.removeAttribute('data-theme');
-        updateIcon(true);
+        // Default to Dark
+        applyTheme('dark');
     }
 
     if (themeBtn) {
         themeBtn.addEventListener('click', () => {
-            const isDark = !html.hasAttribute('data-theme'); // Currently dark (default)
-
-            if (isDark) {
-                // Switch to Light
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                updateIcon(false);
-            } else {
-                // Switch to Dark
-                html.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'dark');
-                updateIcon(true);
-            }
+            const currentTheme = html.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            applyTheme(newTheme);
         });
+    }
+
+    function applyTheme(theme) {
+        if (theme === 'light') {
+            html.setAttribute('data-theme', 'light');
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+            updateIcon(false);
+        } else {
+            html.removeAttribute('data-theme');
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+            updateIcon(true);
+        }
+
+        // Broadcast change to iframes
+        const frames = document.getElementsByTagName('iframe');
+        for (let i = 0; i < frames.length; i++) {
+            frames[i].contentWindow.postMessage({ type: 'theme-change', theme: theme }, '*');
+        }
     }
 
     function updateIcon(isDark) {
@@ -46,5 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
         themeBtn.innerHTML = isDark ? '🌙' : '☀️';
         themeBtn.setAttribute('title', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
         themeBtn.setAttribute('aria-label', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+
+        // Sync button style if needed
+        themeBtn.style.color = isDark ? '#fff' : '#1e293b';
+        themeBtn.style.borderColor = isDark ? 'rgba(255,255,255,0.15)' : '#cbd5e1';
     }
 });
