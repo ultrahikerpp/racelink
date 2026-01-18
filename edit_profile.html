@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編輯個人資料 - RaceLink Taiwan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Russo+One&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .form-section {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .form-title {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1rem;
+            font-size: 1.5rem;
+            color: var(--primary-neon);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-sccondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 0 3px rgba(255, 72, 0, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container flex-between">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo.png" alt="RaceLink TW">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">首頁</a></li>
+                <li><a href="calendar.html">賽事行事曆</a></li>
+                <li><a href="race_list.html">賽事列表</a></li>
+                <li><a href="weather.html">天氣助手</a></li>
+                <li><a href="logistics.html">賽事地圖</a></li>
+                <li><a href="components/Octalysis/DailySurprise.html">每日跑者驚喜包</a></li>
+                <li><a href="dashboard.html" class="active">個人儀表板</a></li>
+            </ul>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="color: var(--text-primary);">你好, 跑者 Miro</span>
+                <div
+                    style="width: 32px; height: 32px; background: var(--primary-neon); border-radius: 50%; box-shadow: var(--glow-primary);">
+                </div>
+                <!-- Theme toggle button matching dashboard -->
+                <button class="theme-toggle-btn" aria-label="Toggle Dark Mode" style="margin-left: 0.5rem;">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container animate-fade-up" style="padding: 3rem 0;">
+        <div class="flex-between" style="margin-bottom: 2rem;">
+            <h1>編輯個人資料</h1>
+            <a href="dashboard.html" class="btn btn-secondary">返回儀表板</a>
+        </div>
+
+        <form action="dashboard.html">
+            <!-- Basic Info -->
+            <div class="form-section">
+                <h3 class="form-title">基本資料</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">姓名 (必填)</label>
+                        <input type="text" id="name" name="name" value="Miro Lu" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nickname">暱稱 (必填)</label>
+                        <input type="text" id="nickname" name="nickname" value="Miro" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">性別 (必填)</label>
+                        <select id="gender" name="gender" required>
+                            <option value="male" selected>男</option>
+                            <option value="female">女</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthday">生日 (必填)</label>
+                        <input type="date" id="birthday" name="birthday" value="1990-01-01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email (必填)</label>
+                        <input type="email" id="email" name="email" value="miro@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">手機 (必填)</label>
+                        <input type="tel" id="mobile" name="mobile" value="0912-345-678" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">居住地 (必填)</label>
+                        <select id="location" name="location" required>
+                            <option value="taipei" selected>台北市</option>
+                            <option value="new_taipei">新北市</option>
+                            <option value="taoyuan">桃園市</option>
+                            <option value="taichung">台中市</option>
+                            <option value="tainan">台南市</option>
+                            <option value="kaohsiung">高雄市</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Target Records -->
+            <div class="form-section">
+                <h3 class="form-title">目標成績</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="target_full">全馬目標 (HH:MM:SS)</label>
+                        <input type="text" id="target_full" name="target_full" value="03:30:00" placeholder="03:30:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="target_half">半馬目標 (HH:MM:SS)</label>
+                        <input type="text" id="target_half" name="target_half" value="01:40:00" placeholder="01:40:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="target_10k">10公里目標 (HH:MM:SS)</label>
+                        <input type="text" id="target_10k" name="target_10k" value="00:45:00" placeholder="00:45:00">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preferences -->
+            <div class="form-section">
+                <h3 class="form-title">跑者偏好</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fav_events">喜好的賽事活動</label>
+                        <select id="fav_events" name="fav_events" multiple style="height: 100px;">
+                            <option value="full" selected>全馬</option>
+                            <option value="half" selected>半馬</option>
+                            <option value="10k">10公里</option>
+                            <option value="trail">越野跑</option>
+                            <option value="fun_run">趣味跑</option>
+                        </select>
+                        <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">可複選 (按住 Ctrl 或
+                            Command 鍵)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="fav_shoes">喜好的跑鞋品牌</label>
+                        <input type="text" id="fav_shoes" name="fav_shoes" value="Nike, Asics"
+                            placeholder="例如: Nike, Adidas, Asics">
+                    </div>
+                    <div class="form-group">
+                        <label for="fav_apparel">喜好的服飾品牌</label>
+                        <input type="text" id="fav_apparel" name="fav_apparel" value="Nike, Under Armour"
+                            placeholder="例如: Nike, Under Armour">
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" onclick="window.location.href='dashboard.html'"
+                    class="btn btn-secondary">取消</button>
+                <button type="submit" class="btn btn-primary">儲存資料</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Script for theme toggle logic (copied from main.js logic or included) -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

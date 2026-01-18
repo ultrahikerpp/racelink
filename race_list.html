@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>賽事列表 - RaceLink Taiwan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Russo+One&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Table Styles - Defaulting to DARK MODE (matching style.css) */
+        .race-table-container {
+            overflow-x: auto;
+            margin-top: 2rem;
+            background: var(--surface-card);
+            /* Dark Blue/Slate */
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        table.race-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .race-table th,
+        .race-table td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .race-table th {
+            background-color: rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            color: var(--primary-neon);
+            /* Neon Orange Header */
+            white-space: nowrap;
+            font-family: 'Russo One', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        /* Column Width Adjustments */
+        .race-table th:nth-child(1) {
+            /* Date */
+            min-width: 90px;
+            width: 10%;
+        }
+
+        .race-table th:nth-child(2) {
+            /* Name */
+            width: 25%;
+            min-width: 180px;
+        }
+
+        .race-table th:nth-child(3) {
+            /* Location */
+            width: 15%;
+            min-width: 90px;
+        }
+
+        .race-table th:nth-child(4) {
+            /* Mileage */
+            width: 6%;
+            /* Significantly reduced */
+            min-width: 50px;
+            white-space: normal;
+        }
+
+        /* Organizer and Status take remaining auto space */
+
+        .race-table th:nth-child(7) {
+            /* Reg Button */
+            width: 10%;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .race-table td:nth-child(7) {
+            text-align: center;
+        }
+
+        .race-table td {
+            color: var(--text-sccondary);
+            /* Slate Gray Text */
+            font-weight: 500;
+        }
+
+        /* Highlight Name Column */
+        .race-table td:nth-child(2) {
+            color: var(--text-primary);
+            /* White Name */
+        }
+
+        .race-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .race-table a.btn-link {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--primary-neon);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+            box-shadow: var(--glow-primary);
+        }
+
+        .race-table a.btn-link:hover {
+            background-color: var(--primary-neon-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Light Mode Overrides */
+        [data-theme="light"] .race-table-container {
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-color: #e2e8f0;
+        }
+
+        [data-theme="light"] .race-table th {
+            background-color: #f8f9fa;
+            color: #1e293b;
+            /* Dark Slate Title */
+            border-bottom-color: #cbd5e1;
+        }
+
+        [data-theme="light"] .race-table td {
+            color: #64748b;
+            /* Slate 500 */
+            border-bottom-color: #e2e8f0;
+        }
+
+        [data-theme="light"] .race-table td:nth-child(2) {
+            color: #0f172a;
+            /* Darker Slate Name */
+        }
+
+        [data-theme="light"] .race-table tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        [data-theme="light"] .race-table a.btn-link {
+            /* Keep button primary color consistent or tweak if requested */
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container flex-between">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo.png" alt="RaceLink TW">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">首頁</a></li>
+                <li><a href="calendar.html">賽事行事曆</a></li>
+                <li><a href="race_list.html" class="active">賽事列表</a></li>
+                <li><a href="weather.html">天氣助手</a></li>
+                <li><a href="logistics.html">賽事地圖</a></li>
+                <li><a href="dashboard.html">個人儀表板</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="#" class="btn btn-primary">登入 / 註冊</a>
+                <button class="theme-toggle-btn" aria-label="Toggle Dark Mode">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="hero" style="min-height: 40vh; align-items: flex-end; padding-bottom: 4rem;">
+        <div class="container hero-content">
+            <h1 class="hero-title animate-fade-up" style="font-size: 3rem;">
+                全國賽事列表
+            </h1>
+            <p class="hero-subtitle animate-fade-up delay-100">
+                網羅全台各地馬拉松與路跑活動，即時更新您的挑戰清單。
+            </p>
+        </div>
+    </header>
+
+    <!-- Content Section -->
+    <section class="container" style="padding: 4rem 0;">
+        <div class="animate-fade-up delay-200">
+            <div id="loading" style="text-align: center; font-size: 1.25rem;">載入賽事資料中...</div>
+
+            <div id="race-container" class="race-table-container" style="display: none;">
+                <table class="race-table">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>賽事名稱</th>
+                            <th>地點</th>
+                            <th>里程</th>
+                            <th>承辦單位</th>
+                            <th>報名狀態</th>
+                            <th>報名</th>
+                        </tr>
+                    </thead>
+                    <tbody id="race-list-body">
+                        <!-- Data will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p style="font-size: 0.875rem; color: #94a3b8; opacity: 0.8;" id="source-citation">
+            資料來源：全國賽會網站
+        </p>
+    </section>
+
+    <footer class="footer">
+        <div class="container" style="text-align: center;">
+            <p style="margin-bottom: 0.5rem;">&copy; 2026 RaceLink Taiwan. Start Passionately, Record Completely.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/race_data.js"></script>
+    <script>
+        // Inline script to render data from global variable
+        document.addEventListener('DOMContentLoaded', () => {
+            const listBody = document.getElementById('race-list-body');
+            const container = document.getElementById('race-container');
+            const loading = document.getElementById('loading');
+
+            try {
+                // Access data from window.raceEvents (loaded by race_data.js)
+                // Fallback to fetch if variable is missing (hybrid approach)
+                let events = window.raceEvents || [];
+
+                if (!events.length) {
+                    // Try fetch if JS file didn't load (e.g., server env)
+                    fetch('scraper/marathon_events.json')
+                        .then(res => res.json())
+                        .then(data => {
+                            renderEvents(data);
+                        })
+                        .catch(e => {
+                            loading.textContent = "目前沒有賽事資料。 (無法讀取本地檔案)";
+                        });
+                    return;
+                }
+
+                renderEvents(events);
+
+                function renderEvents(data) {
+                    if (data.length === 0) {
+                        loading.textContent = "目前沒有賽事資料。";
+                        return;
+                    }
+
+                    data.forEach(event => {
+                        const tr = document.createElement('tr');
+
+                        const regStatusColor = event.registration && event.registration.includes('截止') ? '#ef4444' : '#10b981';
+
+                        tr.innerHTML = `
+                            <td>${event.date || ''}</td>
+                            <td style="font-weight: 500;">${event.name || ''}</td>
+                            <td>${event.location || ''}</td>
+                            <td>${event.mileage || ''}</td>
+                            <td style="font-size: 0.9em;">${event.organizer || ''}</td>
+                            <td style="font-size: 0.9em; color: ${regStatusColor}">${event.registration || ''}</td>
+                            <td>
+                                ${event.url ? `<a href="${event.url}" target="_blank" class="btn-link">前往</a>` : ''}
+                            </td>
+                        `;
+                        listBody.appendChild(tr);
+                    });
+
+                    loading.style.display = 'none';
+                    container.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error(error);
+                loading.textContent = "載入失敗。";
+            }
+        });
+    </script>
+</body>
+
+</html>

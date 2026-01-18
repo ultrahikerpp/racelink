@@ -1,0 +1,15 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+
+# Scraper (User requested exclusion)
+scraper/
+
+# IDE
+.vscode/
