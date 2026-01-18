@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入 - RaceLink Taiwan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Russo+One&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container flex-between">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo.png" alt="RaceLink TW">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">首頁</a></li>
+                <li><a href="race_list.html">賽事行事曆</a></li>
+                <li><a href="my_races.html">我的賽事</a></li>
+                <li><a href="dashboard.html">個人儀表板</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <!-- Link to Register on Login page -->
+                <a href="register.html" class="btn btn-secondary">註冊帳號</a>
+                <button class="theme-toggle-btn" aria-label="Toggle Dark Mode">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="auth-page">
+        <div class="card auth-card animate-fade-up">
+            <div class="auth-header">
+                <h2>歡迎回來</h2>
+                <p>登入 RaceLink，繼續你的跑者旅程</p>
+            </div>
+
+            <form class="auth-form" action="#" method="POST">
+                <div class="form-group">
+                    <label for="email" class="form-label">電子郵件</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="runner@example.com"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">密碼</label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="••••••••"
+                        required>
+                </div>
+                <!-- Forgot Password Link -->
+                <div style="text-align: right; margin-top: -0.5rem;">
+                    <a href="#" style="font-size: 0.85rem; color: var(--text-muted);">忘記密碼？</a>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">登入</button>
+            </form>
+
+            <!-- Social Login -->
+            <div class="social-login">
+                <button class="btn btn-social btn-google">
+                    <!-- Google SVG Icon -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4" />
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853" />
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.26.81-.58z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335" />
+                    </svg>
+                    使用 Google 帳號登入
+                </button>
+                <button class="btn btn-social btn-facebook">
+                    <!-- Facebook SVG Icon -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1877F2">
+                        <path
+                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg>
+                    使用 Facebook 帳號登入
+                </button>
+                <button class="btn btn-social btn-line">
+                    <!-- Line SVG Icon (Approximate) -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#06C755">
+                        <path
+                            d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.019 9.606.391.084.922.258 1.057.592.121.303.079.792.037 1.109-.063.486-.296 1.905-.349 2.227-.059.362-.279 1.411 1.229.752 1.508-.659 8.169-4.809 11.141-8.228 2.053-2.316 2.866-4.634 2.866-6.058zM8.38 13.911H5.432a.798.798 0 0 1-.798-.799v-5.26c0-.441.357-.798.798-.798s.798.357.798.798v4.462h2.15c.441 0 .798.358.798.798s-.357.799-.798.799zm4.072 0H9.504a.798.798 0 0 1-.798-.799v-5.26c0-.441.358-.798.798-.798s.798.357.798.798v5.26c0 .441.358.799.798.799zm5.345 0h-4.043a.798.798 0 0 1-.798-.799v-5.26c0-.441.358-.798.798-.798s.798.357.798.798v5.26c.001.441.358.799.799.799zm4.004-1.558c0 .441-.358.799-.798.799h-2.148v.759c0 .441-.358.799-.798.799s-.798-.358-.798-.799v-5.26c0-.441.358-.798.798-.798h2.946c.441 0 .798.357.798.798s-.357.798-.798.798H20.01v.654h2.148c.441 0 .798.357.798.798z" />
+                    </svg>
+                    使用 Line 帳號登入
+                </button>
+            </div>
+
+            <p style="margin-top: 1.5rem; font-size: 0.9rem;">
+                還沒有帳號嗎？ <a href="register.html" style="color: var(--primary-neon); font-weight: 600;">立即註冊</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 RaceLink Taiwan. Start Passionately, Record Completely.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
