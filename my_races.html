@@ -292,6 +292,107 @@
                 transform: scale(1);
             }
         }
+
+        /* Review Module Styles */
+        .rating-box {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.5);
+            /* slate-800/50 */
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+        }
+
+        [data-theme="light"] .rating-box {
+            background: #f8fafc;
+            /* slate-50 */
+            border-color: var(--border-light);
+        }
+
+        .rating-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-sccondary);
+            /* slate-400 equivalent */
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        [data-theme="light"] .rating-label {
+            color: var(--text-sccondary);
+            /* Ensure visibility in light mode */
+        }
+
+        .rating-category {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .rating-category {
+            border-bottom-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .rating-category:last-child {
+            border-bottom: none;
+        }
+
+        .stars {
+            display: flex;
+            gap: 0.25rem;
+            cursor: pointer;
+        }
+
+        .star {
+            font-size: 1.25rem;
+            color: var(--text-sccondary);
+            transition: color 0.2s;
+        }
+
+        /* Hover effect for better interactivity */
+        .vote-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* JS driven active state */
+        .star.filled {
+            color: #fbbf24;
+            /* amber-400 */
+        }
+
+        .review-input {
+            width: 100%;
+            background: var(--surface-dark);
+            /* Match input bg to theme */
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        [data-theme="light"] .review-input {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            /* slate-300 */
+        }
+
+        .review-input:focus {
+            outline: none;
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 0 2px rgba(var(--primary-neon-rgb), 0.2);
+        }
     </style>
 </head>
 
@@ -476,6 +577,140 @@
                 </div>
             </div>
 
+            <!-- Review Module -->
+            <div class="module-card animate-fade-up delay-200" style="grid-column: 1 / -1;">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span>📝</span> 賽事評價
+                    </div>
+                </div>
+                <div class="module-content">
+                    <form id="review-form" onsubmit="submitReview(event)">
+
+                        <!-- Overall Rating -->
+                        <div class="rating-box">
+                            <label class="rating-label">整體評價</label>
+                            <div class="flex justify-center gap-2 stars" id="rating-overall">
+                                <button type="button" class="star text-3xl focus:outline-none"
+                                    onclick="rate('overall', 1)">★</button>
+                                <button type="button" class="star text-3xl focus:outline-none"
+                                    onclick="rate('overall', 2)">★</button>
+                                <button type="button" class="star text-3xl focus:outline-none"
+                                    onclick="rate('overall', 3)">★</button>
+                                <button type="button" class="star text-3xl focus:outline-none"
+                                    onclick="rate('overall', 4)">★</button>
+                                <button type="button" class="star text-3xl focus:outline-none"
+                                    onclick="rate('overall', 5)">★</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-6">
+                            <!-- Categories -->
+                            <div class="rating-category">
+                                <span class="text-sm font-medium">賽道路況</span>
+                                <div class="stars" id="rating-track">
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('track', 1)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('track', 2)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('track', 3)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('track', 4)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('track', 5)">★</button>
+                                </div>
+                            </div>
+                            <div class="rating-category">
+                                <span class="text-sm font-medium">賽道補給</span>
+                                <div class="stars" id="rating-supply">
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('supply', 1)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('supply', 2)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('supply', 3)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('supply', 4)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('supply', 5)">★</button>
+                                </div>
+                            </div>
+                            <div class="rating-category">
+                                <span class="text-sm font-medium">大會安排</span>
+                                <div class="stars" id="rating-org">
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('org', 1)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('org', 2)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('org', 3)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('org', 4)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('org', 5)">★</button>
+                                </div>
+                            </div>
+                            <div class="rating-category">
+                                <span class="text-sm font-medium">參賽物資</span>
+                                <div class="stars" id="rating-kit">
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('kit', 1)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('kit', 2)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('kit', 3)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('kit', 4)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('kit', 5)">★</button>
+                                </div>
+                            </div>
+                            <div class="rating-category">
+                                <span class="text-sm font-medium">完賽禮</span>
+                                <div class="stars" id="rating-gift">
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('gift', 1)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('gift', 2)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('gift', 3)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('gift', 4)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('gift', 5)">★</button>
+                                </div>
+                            </div>
+                            <div class="rating-category">
+                                <span class="text-sm font-medium">獎牌設計</span>
+                                <div class="stars" id="rating-medal">
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('medal', 1)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('medal', 2)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('medal', 3)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('medal', 4)">★</button>
+                                    <button type="button" class="star focus:outline-none"
+                                        onclick="rate('medal', 5)">★</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="review-text" class="rating-label">賽事評論</label>
+                            <textarea id="review-text" class="review-input" placeholder="分享您的參賽心得..."></textarea>
+                        </div>
+
+                        <div class="text-right">
+                            <button type="submit"
+                                class="bg-primary-neon text-black font-bold py-2 px-6 rounded hover:bg-white transition shadow-lg shadow-lime-500/20">送出評價</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
 
         <!-- Empty State -->
@@ -620,6 +855,72 @@
             modal.classList.add('opacity-0', 'pointer-events-none');
             quoteBox.classList.remove('modal-enter');
         }
+
+        // 5. Review System Logic
+        const ratings = {
+            overall: 0,
+            track: 0,
+            supply: 0,
+            org: 0,
+            kit: 0,
+            gift: 0,
+            medal: 0
+        };
+
+        function rate(category, value) {
+            ratings[category] = value;
+            updateStarDisplay(category);
+        }
+
+        function updateStarDisplay(category) {
+            const container = document.getElementById(`rating-${category}`);
+            const stars = container.querySelectorAll('.star');
+
+            stars.forEach((star, index) => {
+                if (index < ratings[category]) {
+                    star.classList.add('filled');
+                } else {
+                    star.classList.remove('filled');
+                }
+            });
+        }
+
+        function submitReview(event) {
+            event.preventDefault();
+
+            // Check if overall rating is set
+            if (ratings.overall === 0) {
+                alert('請至少給予整體評價！');
+                return;
+            }
+
+            const comment = document.getElementById('review-text').value;
+            const activeRace = document.querySelector('.race-chip.active').textContent.replace('🏅 ', '').trim();
+
+            // In a real app, send to backend
+            console.log(`Submitting review for ${activeRace}:`, { ratings, comment });
+
+            alert(`感謝您！已成功送出對「${activeRace}」的評價。`);
+
+            // Reset form
+            resetReviewForm();
+        }
+
+        function resetReviewForm() {
+            Object.keys(ratings).forEach(key => {
+                ratings[key] = 0;
+                updateStarDisplay(key);
+            });
+            document.getElementById('review-text').value = '';
+        }
+
+        // Add to updateDashboard to clear form when switching races
+        const originalUpdateDashboard = updateDashboard;
+        updateDashboard = function (race) {
+            originalUpdateDashboard(race);
+            resetReviewForm();
+            // Optional: Load previous review if exists
+        };
     </script>
 </body>
 
