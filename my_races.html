@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的賽事 - RaceLink Taiwan</title>
+    <!-- Tailwind CSS (for Daily Quotes widget compatibility) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Russo+One&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Shared Styles & Overrides */
+        body {
+            /* Ensure font consistency especially with Tailwind loaded */
+            font-family: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            /* Fallback/Base */
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Race Selector Scrollbar */
+        .race-selector {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-neon) var(--surface-dark);
+        }
+
+        .race-chip {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-light);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-full);
+            color: var(--text-sccondary);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .race-chip:hover {
+            border-color: var(--primary-neon);
+            color: var(--text-primary);
+        }
+
+        .race-chip.active {
+            background: var(--primary-neon);
+            color: #000;
+            border-color: var(--primary-neon);
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(204, 255, 0, 0.4);
+        }
+
+        /* Module Containers */
+        .module-card {
+            background: var(--surface-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .module-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        /* Weather Specifics (Adapted from weather.html) */
+        .weather-hero {
+            background: linear-gradient(135deg, rgba(255, 72, 0, 0.1) 0%, rgba(5, 10, 24, 0.8) 100%);
+            border: 1px solid var(--primary-neon);
+            color: white;
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        /* Light Mode Override for Weather Hero */
+        [data-theme="light"] .weather-hero {
+            background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%);
+            /* Sky blue to white */
+            border-color: var(--accent-cyan);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(8, 145, 178, 0.1);
+        }
+
+        [data-theme="light"] .weather-hero .text-slate-300 {
+            color: var(--text-sccondary);
+            /* Fix location text */
+        }
+
+        [data-theme="light"] .weather-hero .temp-display {
+            color: var(--text-primary);
+            text-shadow: none;
+        }
+
+        [data-theme="light"] .weather-hero .text-xl {
+            color: var(--accent-cyan);
+        }
+
+        [data-theme="light"] .weather-hero span.rounded-full {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: var(--border-light);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .temp-display {
+            font-size: 4rem;
+            font-weight: 800;
+            font-family: 'Russo One', sans-serif;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            margin: 0.5rem 0;
+            line-height: 1;
+        }
+
+        .forecast-row {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .forecast-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        [data-theme="light"] .forecast-item {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-light);
+        }
+
+        [data-theme="light"] .forecast-item .text-slate-400 {
+            color: var(--text-sccondary);
+        }
+
+        [data-theme="light"] .forecast-item .font-bold {
+            color: var(--text-primary);
+        }
+
+        /* Outfit Box Styles */
+        .outfit-box {
+            background: rgba(30, 41, 59, 0.5);
+            /* dark slate */
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border-left: 4px solid #facc15;
+            /* yellow-400 */
+            color: #cbd5e1;
+            /* slate-300 */
+            font-size: 0.875rem;
+            line-height: 1.625;
+            transition: all 0.3s;
+        }
+
+        [data-theme="light"] .outfit-box {
+            background: #f0f9ff;
+            /* sky-50 */
+            border-left-color: var(--primary-neon);
+            /* Use primary orange for contrast or keep yellow? User said "too dark", so lighter is key */
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .outfit-box strong {
+            color: var(--accent-cyan);
+        }
+
+
+        /* Logistics Specifics (Adapted from logistics.html) */
+        .map-preview {
+            position: relative;
+            height: 300px;
+            background: #1a2236;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .logistics-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .logistics-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+
+        .logistics-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Daily Quotes Widget (Tailwind overrides/integration) */
+
+
+        /* Traffic Alert Styles */
+        .traffic-alert {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(124, 45, 18, 0.2);
+            /* orange-900/20 */
+            border-left: 4px solid #f97316;
+            /* orange-500 */
+            border-radius: 0 0.25rem 0.25rem 0;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .alert-content {
+            color: #cbd5e1;
+            /* slate-300 */
+        }
+
+        [data-theme="light"] .traffic-alert {
+            background: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+        }
+
+        [data-theme="light"] .alert-content {
+            color: #9a3412;
+            /* orange-800 - High Contrast */
+        }
+
+        /* Modal Animation (from DailySurprise) */
+        .modal-enter {
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes modalPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" style="position: relative; z-index: 50;">
+        <div class="container flex-between">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo.png" alt="RaceLink TW">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">首頁</a></li>
+                <li><a href="race_list.html">賽事行事曆</a></li>
+                <li><a href="my_races.html" class="active">我的賽事</a></li>
+                <li><a href="dashboard.html">個人儀表板</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="theme-toggle-btn" aria-label="Toggle Dark Mode" onclick="toggleTheme()">🌙</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span style="font-size: 0.9rem; color: var(--text-primary);">Miro</span>
+                    <div
+                        style="width: 32px; height: 32px; background: var(--accent-volt); border-radius: 50%; box-shadow: 0 0 10px var(--accent-volt);">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-8 relative" style="padding-top: 2rem;">
+
+        <!-- Header & Daily Quote -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
+            <div>
+                <h1 class="text-4xl font-bold font-russo mb-2" style="color: var(--text-primary);">我的賽事</h1>
+                <p style="color: var(--text-sccondary);">管理這季的重點目標，掌握天氣與賽道資訊。</p>
+            </div>
+
+            <!-- Daily Quote Widget -->
+            <div class="relative group cursor-pointer" onclick="openQuoteModal()">
+                <div
+                    class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200">
+                </div>
+                <div class="relative rounded-lg px-6 py-3 border border-slate-700 flex items-center gap-4 transition"
+                    style="background: var(--surface-card); border-color: var(--border-light);">
+                    <div class="text-3xl">🎁</div>
+                    <div>
+                        <div class="text-pink-400 font-bold text-sm uppercase tracking-wider">Daily Quote</div>
+                        <div class="font-bold" style="color: var(--text-primary);">每日語錄</div>
+                    </div>
+                    <div class="text-xs ml-2" style="color: var(--text-sccondary);">點擊開啟</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Race Selector -->
+        <div class="mb-8">
+            <h3 class="text-sm uppercase tracking-widest font-bold mb-3" style="color: var(--text-sccondary);">選擇賽事</h3>
+            <div class="race-selector" id="race-selector">
+                <!-- Chips injected by JS -->
+                <div class="italic px-4" style="color: var(--text-sccondary);">載入已報名賽事...</div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid" id="race-dashboard" style="display: none;">
+
+            <!-- Weather Module -->
+            <div class="module-card animate-fade-up">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span>🌦️</span> 天氣助手
+                    </div>
+                    <span class="text-xs bg-slate-800 px-2 py-1 rounded text-cyan-400 border border-cyan-400/30">LIVE
+                        Forecast</span>
+                </div>
+                <div class="module-content">
+                    <div class="weather-hero">
+                        <div class="text-slate-300 text-sm tracking-widest uppercase mb-2" id="weather-loc">📍 台北市 |
+                            總統府廣場</div>
+                        <div class="temp-display" id="weather-temp">16°C</div>
+                        <div class="text-xl text-cyan-300" id="weather-desc">多雲時陰 Cloudy</div>
+                        <div class="flex justify-center gap-4 mt-4 text-sm">
+                            <span class="bg-black/30 px-3 py-1 rounded-full border border-white/10">💧 75%</span>
+                            <span class="bg-black/30 px-3 py-1 rounded-full border border-white/10">🌬️ 3.5 m/s</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="font-bold text-white mb-3 text-lg flex items-center gap-2">
+                            <span>👕</span> 穿搭建議
+                        </h4>
+                        <div class="outfit-box">
+                            <p id="outfit-text">體感偏涼，建議穿著 <strong>透氣長袖壓縮衣</strong> 搭配
+                                <strong>跑步背心</strong>。起跑前可準備拋棄式雨衣保暖。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-white mb-3 text-sm uppercase tracking-wider">賽事時段預報</h4>
+                        <div class="forecast-row">
+                            <div class="forecast-item">
+                                <div class="text-xs text-slate-400">06:00</div>
+                                <div class="text-2xl my-1">☁️</div>
+                                <div class="font-bold">15°C</div>
+                            </div>
+                            <div class="forecast-item">
+                                <div class="text-xs text-slate-400">08:00</div>
+                                <div class="text-2xl my-1">⛅</div>
+                                <div class="font-bold">17°C</div>
+                            </div>
+                            <div class="forecast-item">
+                                <div class="text-xs text-slate-400">10:00</div>
+                                <div class="text-2xl my-1">☀️</div>
+                                <div class="font-bold">20°C</div>
+                            </div>
+                            <div class="forecast-item">
+                                <div class="text-xs text-slate-400">12:00</div>
+                                <div class="text-2xl my-1">☀️</div>
+                                <div class="font-bold">22°C</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logistics Module -->
+            <div class="module-card animate-fade-up delay-100">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span>🗺️</span> 賽事地圖
+                    </div>
+                    <button
+                        class="text-xs bg-primary-neon text-black px-3 py-1 rounded font-bold hover:bg-white transition">全螢幕地圖</button>
+                </div>
+                <div class="module-content">
+                    <div class="map-preview">
+                        <img src="images/map_dark.png" alt="Race Map"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                        <div
+                            class="absolute bottom-4 left-4 bg-slate-900/90 backdrop-blur px-3 py-1 rounded border border-primary-neon/50">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                <span class="text-xs font-bold text-green-400">GPS Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="logistics-list">
+                        <div class="logistics-item group cursor-pointer hover:border hover:border-primary-neon/30">
+                            <div class="text-2xl bg-slate-800 p-3 rounded-full">🎒</div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-white group-hover:text-primary-neon transition">衣物保管區</h4>
+                                <p class="text-xs text-slate-400">A-E區，開放時間 04:00 - 12:00</p>
+                            </div>
+                            <div class="text-xl text-slate-600 group-hover:text-white">›</div>
+                        </div>
+                        <div class="logistics-item group cursor-pointer hover:border hover:border-primary-neon/30">
+                            <div class="text-2xl bg-slate-800 p-3 rounded-full">🚻</div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-white group-hover:text-primary-neon transition">流動廁所</h4>
+                                <p class="text-xs text-slate-400">起跑點後方 50m，排隊人潮較少</p>
+                            </div>
+                            <div class="text-xl text-slate-600 group-hover:text-white">›</div>
+                        </div>
+                        <div class="logistics-item group cursor-pointer hover:border hover:border-primary-neon/30">
+                            <div class="text-2xl bg-slate-800 p-3 rounded-full">🚌</div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-white group-hover:text-primary-neon transition">接駁車站</h4>
+                                <p class="text-xs text-slate-400">捷運站 2 號出口，04:30 首發</p>
+                            </div>
+                            <div class="text-xl text-slate-600 group-hover:text-white">›</div>
+                        </div>
+                    </div>
+
+                    <div class="traffic-alert">
+                        <strong class="text-orange-400 block mb-1">⚠️ 交通管制提醒</strong>
+                        <span class="alert-content">賽道周邊道路將於 04:00 起進行全線封閉，請通知親友提早改道。</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="text-center py-20 hidden">
+            <div class="text-6xl mb-4 opacity-30">🏃‍♂️</div>
+            <h3 class="text-2xl font-bold text-white mb-2">尚未報名任何賽事</h3>
+            <p class="text-slate-400 mb-8">前往賽事列表尋找您的下一個挑戰吧！</p>
+            <a href="race_list.html"
+                class="bg-primary-neon text-black font-bold py-3 px-8 rounded-full hover:bg-white transition">前往賽事列表</a>
+        </div>
+
+    </main>
+
+    <!-- Daily Quote Modal -->
+    <div id="quote-modal"
+        class="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm" onclick="closeQuoteModal()"></div>
+        <div id="quote-box"
+            class="relative bg-slate-900 border-2 border-pink-500/50 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl transform scale-90 transition-transform">
+            <button onclick="closeQuoteModal()" class="absolute top-4 right-4 text-slate-500 hover:text-white">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="text-center pt-2">
+                <div class="inline-block p-3 rounded-full bg-pink-500/20 mb-4">
+                    <span class="text-4xl">💡</span>
+                </div>
+                <h3 class="text-2xl font-black text-white mb-6">每日跑者語錄</h3>
+                <div
+                    class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-6 min-h-[120px] flex items-center justify-center">
+                    <p id="quote-text" class="text-lg text-slate-200 font-medium leading-relaxed">Loading...</p>
+                </div>
+                <button onclick="closeQuoteModal()"
+                    class="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-pink-600/20">收下能量</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/race_data.js"></script>
+    <script>
+        // 1. Load Registered Races
+        document.addEventListener('DOMContentLoaded', () => {
+            const registeredNames = JSON.parse(localStorage.getItem('registeredRaces') || '[]');
+            const selector = document.getElementById('race-selector');
+            const dashboard = document.getElementById('race-dashboard');
+            const emptyState = document.getElementById('empty-state');
+
+            // Filter global raceEvents for registered ones
+            // Ensure window.raceEvents is loaded (from js/race_data.js)
+            const allEvents = window.raceEvents || [];
+            const myRaces = allEvents.filter(e => registeredNames.includes(e.name));
+
+            if (myRaces.length === 0) {
+                selector.style.display = 'none';
+                dashboard.style.display = 'none';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            // Render Selector Chips
+            selector.innerHTML = '';
+            dashboard.style.display = 'grid'; // Show dashboard
+
+            myRaces.forEach((race, index) => {
+                const chip = document.createElement('div');
+                chip.className = `race-chip ${index === 0 ? 'active' : ''}`; // Select first by default
+                chip.innerHTML = `<span>🏅</span> ${race.name}`;
+                chip.onclick = () => selectRace(race, chip);
+                selector.appendChild(chip);
+            });
+
+            // Initial Render of first race
+            if (myRaces.length > 0) {
+                updateDashboard(myRaces[0]);
+            }
+        });
+
+        // 2. Select Race Logic
+        function selectRace(race, chipElement) {
+            // Update UI Active State
+            document.querySelectorAll('.race-chip').forEach(c => c.classList.remove('active'));
+            chipElement.classList.add('active');
+
+            updateDashboard(race);
+        }
+
+        // 3. Update Dashboard Content (Mock Data Logic)
+        function updateDashboard(race) {
+            // Update Weather Loc
+            // Extract City from location (simple heuristic)
+            const location = race.location || '未知地點';
+            const city = location.substring(0, 3);
+            document.getElementById('weather-loc').textContent = `📍 ${city} | ${location}`;
+
+            // Mock Random Weather Variations for demo purpose
+            // In a real app, this would fetch API data based on race.date and race.location
+            const temps = [14, 16, 18, 22, 12];
+            const baseTemp = temps[Math.floor(Math.random() * temps.length)];
+
+            document.getElementById('weather-temp').textContent = `${baseTemp}°C`;
+
+            // Adjust desc based on temp
+            if (baseTemp < 15) {
+                document.getElementById('weather-desc').textContent = "陰有雨 Rainy";
+                document.getElementById('outfit-text').innerHTML = `氣溫偏低且有雨，建議穿著 <strong>防水風衣</strong> 與 <strong>保暖長褲</strong>。務必準備替換衣物以免失溫。`;
+            } else if (baseTemp > 24) {
+                document.getElementById('weather-desc').textContent = "晴朗炎熱 Sunny";
+                document.getElementById('outfit-text').innerHTML = `天氣炎熱，請選擇 <strong>極輕量透氣背心</strong>。注意 <strong>水分補充</strong> 與 <strong>防曬</strong>。`;
+            } else {
+                document.getElementById('weather-desc').textContent = "多雲時陰 Cloudy";
+                document.getElementById('outfit-text').innerHTML = `體感舒適，建議穿著 <strong>透氣短袖</strong> 或 <strong>背心</strong>。起跑前可穿著薄外套熱身。`;
+            }
+        }
+
+        // 4. Daily Quote Logic
+        const quotes = [
+            "跑步不是為了戰勝別人，而是為了戰勝昨天的自己。",
+            "痛是難免的，苦是甘願的。 (Pain is inevitable. Suffering is optional.)",
+            "只要出發，就能抵達。",
+            "沒有奇蹟，只有累積。",
+            "你的雙腳，帶你去你想去的地方。"
+        ];
+
+        const modal = document.getElementById('quote-modal');
+        const quoteBox = document.getElementById('quote-box');
+        const quoteText = document.getElementById('quote-text');
+
+        function openQuoteModal() {
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteText.textContent = randomQuote;
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+            quoteBox.classList.add('modal-enter');
+        }
+
+        function closeQuoteModal() {
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            quoteBox.classList.remove('modal-enter');
+        }
+    </script>
+</body>
+
+</html>

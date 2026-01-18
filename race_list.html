@@ -154,6 +154,34 @@
             /* Keep button primary color consistent or tweak if requested */
             box-shadow: none;
         }
+
+        /* Registered Button Styles */
+        .btn-register {
+            display: block;
+            /* Make it stack below */
+            width: 100%;
+            margin-top: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .btn-register:hover {
+            border-color: var(--primary-neon);
+            color: var(--primary-neon);
+        }
+
+        .btn-register.active {
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Dark transparent */
+            border-color: transparent;
+            color: rgba(255, 255, 255, 0.5);
+        }
     </style>
 </head>
 
@@ -167,10 +195,9 @@
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">首頁</a></li>
-                <li><a href="calendar.html">賽事行事曆</a></li>
-                <li><a href="race_list.html" class="active">賽事列表</a></li>
-                <li><a href="weather.html">天氣助手</a></li>
-                <li><a href="logistics.html">賽事地圖</a></li>
+                <!-- Linking 'Race Calendar' to the List View (race_list.html) as it contains registration -->
+                <li><a href="race_list.html" class="active">賽事行事曆</a></li>
+                <li><a href="my_races.html">我的賽事</a></li>
                 <li><a href="dashboard.html">個人儀表板</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 1rem;">
@@ -254,6 +281,25 @@
                     return;
                 }
 
+                function isRegistered(raceName) {
+                    const registered = JSON.parse(localStorage.getItem('registeredRaces') || '[]');
+                    return registered.includes(raceName);
+                }
+
+                window.toggleRegistration = function (btn, raceName) {
+                    let registered = JSON.parse(localStorage.getItem('registeredRaces') || '[]');
+                    if (registered.includes(raceName)) {
+                        registered = registered.filter(r => r !== raceName);
+                        btn.classList.remove('active');
+                        btn.textContent = '報名';
+                    } else {
+                        registered.push(raceName);
+                        btn.classList.add('active');
+                        btn.textContent = '已報名';
+                    }
+                    localStorage.setItem('registeredRaces', JSON.stringify(registered));
+                };
+
                 renderEvents(events);
 
                 function renderEvents(data) {
@@ -274,8 +320,12 @@
                             <td>${event.mileage || ''}</td>
                             <td style="font-size: 0.9em;">${event.organizer || ''}</td>
                             <td style="font-size: 0.9em; color: ${regStatusColor}">${event.registration || ''}</td>
-                            <td>
+                            <td class="action-cell">
                                 ${event.url ? `<a href="${event.url}" target="_blank" class="btn-link">前往</a>` : ''}
+                                <button class="btn-register ${isRegistered(event.name) ? 'active' : ''}" 
+                                    onclick="toggleRegistration(this, '${event.name}')">
+                                    ${isRegistered(event.name) ? '已報名' : '報名'}
+                                </button>
                             </td>
                         `;
                         listBody.appendChild(tr);

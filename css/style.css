@@ -221,7 +221,8 @@ p {
 
 /* Navbar */
 .navbar {
-    background: var(--surface-nav);
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+    /* Rich Midnight Gradient (Dark Default) */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-light);
@@ -232,6 +233,12 @@ p {
     transition: background 0.3s;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
+
+[data-theme="light"] .navbar {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.95));
+    /* Mist White Gradient */
+}
+
 
 .nav-links {
     display: flex;
@@ -300,10 +307,10 @@ p {
 }
 
 /* Force text visibility against the rich background */
-.hero-title, 
+.hero-title,
 .hero-subtitle {
     color: #ffffff !important;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
 .hero-subtitle {
